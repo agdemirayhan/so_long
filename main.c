@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/06/30 15:29:02 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/06/30 17:43:42 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,25 @@
 #include <stdbool.h>
 #include "MLX42/include/MLX42/MLX42.h"
 
-#define WIDTH 512
-#define HEIGHT 512
+#define WIDTH 1024
+#define HEIGHT 1024
 
 static mlx_image_t* image;
 
+typedef struct s_data
+{
+	void *mlx_ptr;
+	void *win_ptr;
+} t_data;
+
+
 // -----------------------------------------------------------------------------
+
+static void error(void)
+{
+	puts(mlx_strerror(mlx_errno));
+	exit(EXIT_FAILURE);
+}
 
 int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 {
@@ -59,9 +72,23 @@ void ft_hook(void* param)
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
 		image->instances[0].x -= 5;
 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
-		image->instances[0].x += 5;
+		image->instances[0].x += 15;
 }
 
+void my_keyhook(mlx_key_data_t keydata, void* param)
+{
+	// If we PRESS the 'J' key, print "Hello".
+	if (keydata.key == MLX_KEY_J && keydata.action == MLX_PRESS)
+		puts("Hello ");
+
+	// If we RELEASE the 'K' key, print "World".
+	if (keydata.key == MLX_KEY_K && keydata.action == MLX_RELEASE)
+		puts("World");
+
+	// If we HOLD the 'L' key, print "!".
+	if (keydata.key == MLX_KEY_L && keydata.action == MLX_REPEAT)
+		puts("!");
+}
 // -----------------------------------------------------------------------------
 
 int32_t main(void)
@@ -74,7 +101,7 @@ int32_t main(void)
 		puts(mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
-	if (!(image = mlx_new_image(mlx, 128, 128)))
+	if (!(image = mlx_new_image(mlx, 256, 256)))
 	{
 		mlx_close_window(mlx);
 		puts(mlx_strerror(mlx_errno));
@@ -86,7 +113,10 @@ int32_t main(void)
 		puts(mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
+
 	
+	
+	mlx_key_hook(mlx, &my_keyhook, NULL);
 	mlx_loop_hook(mlx, ft_randomize, mlx);
 	mlx_loop_hook(mlx, ft_hook, mlx);
 
