@@ -1,33 +1,37 @@
 # Variables
 NAME = so_long
 CC = cc
-# CFLAGS = -Wall -Wextra -Werror
-SRCS = main.c 
-OBJS = $(SRCS:.c=.o)
-MLX_PATH = mlx
-MLX = $(MLX_PATH)/libmlx.a
+CFLAGS = -framework Cocoa -framework OpenGL -framework IOKit
+SRCS = main.c
+OBJDIR := obj
+OBJS = $(SRCS:%.c=$(OBJDIR)/%.o)
+MLX42_PATH = MLX42
+MLX42_BUILD_PATH = $(MLX42_PATH)/build
+MLX42 = $(MLX42_BUILD_PATH)/libmlx42.a
 RM = rm -f
 
 # Compilation rule
-$(NAME): $(OBJS) $(MLX)
-	$(CC) $(CFLAGS) $(OBJS) -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+$(NAME): $(OBJS) $(MLX42)
+	@$(CC) $(OBJS) $(CFLAGS) $(MLX42) -Iinclude -lglfw -g -o $(NAME)
 
 # Object files rule
-%.o: %.c
+$(OBJDIR)/%.o: %.c
+	@mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # MinilibX library
-$(MLX):
-	make -C $(MLX_PATH)
+$(MLX42):
+	@cd $(MLX42_PATH) && rm -rf build && cmake -B build && cmake --build build -j4
 
 # Clean object files
 clean:
 	$(RM) $(OBJS)
-	make -C $(MLX_PATH) clean
+	@cd $(MLX42_PATH) && cmake --build build --target clean || true
 
 # Clean all generated files
 fclean: clean
 	$(RM) $(NAME)
+	@cd $(MLX42_PATH) && rm -rf build
 
 # Recompile everything
 re: fclean all
