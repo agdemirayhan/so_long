@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 19:54:07 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/06 11:47:39 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/06 11:54:24 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,19 @@
 // # define ESC 53
 // # define SIZE 48
 
+typedef struct s_assets
+{
+	mlx_image_t	*hut;
+	mlx_image_t	*lumberjack;
+	mlx_image_t	*wall;
+	mlx_image_t	*tree;
+	mlx_image_t	*terrain;
+} t_assets;
+
 typedef struct s_game
 {
 	mlx_t		*mlx;
+	t_assets	assets;
 }				t_game;
 
 #endif

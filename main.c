@@ -6,11 +6,12 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/06 11:48:59 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/06 15:00:17 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MLX42/include/MLX42/MLX42.h"
+#include "so_long.h"
 // #include <stdbool.h>
 // #include <stdio.h>
 // #include <stdlib.h>
@@ -84,45 +85,95 @@ void	ft_hook(void *param)
 		image->instances[0].x += 5;
 }
 
-int32_t	main(void)
+mlx_image_t	*ft_asset_to_image(mlx_t *mlx, char *img_path)
 {
-	
-	
-	// Start mlx
-	mlx_t *mlx = mlx_init(WIDTH, HEIGHT, "Test", true);
-	if (!mlx)
-		error();
+	xpm_t		*xpm;
+	mlx_image_t	*img;
 
 	// Try to load the file
-	xpm_t *xpm = mlx_load_xpm42("./temp/terrain.xpm42");
+	xpm = mlx_load_xpm42(img_path);
 	if (!xpm)
 		error();
-
 	// Convert texture to a displayable image
-	mlx_image_t *img = mlx_texture_to_image(mlx, &xpm->texture);
+	img = mlx_texture_to_image(mlx, &xpm->texture);
 	if (!img)
 		error();
+	// Clean up the xpm structure after conversion
+	mlx_delete_xpm42(xpm);
+	return (img);
+}
 
-	// Display the image
-	for (int i = 0; i <= WIDTH; i = i + 120)
+int32_t	main(void)
+{
+	t_game game;
+
+	// Initialize MLX
+	game.mlx = mlx_init(WIDTH, HEIGHT, "Test", true);
+	if (!game.mlx)
+		error();
+
+	// Load the terrain, wall, and lumberjack images
+	game.assets.terrain = ft_asset_to_image(game.mlx, "./temp/terrain.xpm42");
+	game.assets.wall = ft_asset_to_image(game.mlx, "./temp/tree2.xpm42");
+	game.assets.lumberjack = ft_asset_to_image(game.mlx,
+			"./temp/lumberjack.xpm42");
+	game.assets.hut = ft_asset_to_image(game.mlx, "./temp/hut.xpm42");
+	game.assets.tree = ft_asset_to_image(game.mlx, "./temp/tree.xpm42");
+
+	// Define the map
+	char *map[] = {"1111111111111", "100100000C0C1", "100001101C001",
+		"1C0011EP10001", "1111111111111", NULL};
+
+	// Define the tile size
+	int tile_size = 120; // Adjust this value to match the size of your images
+
+	// Display the images based on the map
+	for (int y = 0; map[y] != NULL; y++)
 	{
-		for (int j = 0; j <= HEIGHT; j = j + 120)
+		for (int x = 0; map[y][x] != '\0'; x++)
 		{
-			if (mlx_image_to_window(mlx, img, i, j) < 0)
+			// Place terrain on each tile
+			if (mlx_image_to_window(game.mlx, game.assets.terrain, x
+					* tile_size, y * tile_size) < 0)
 				error();
+
+			// Place the specific assets based on the map characters
+			if (map[y][x] == '1')
+			{
+				if (mlx_image_to_window(game.mlx, game.assets.wall, x
+						* tile_size, y * tile_size) < 0)
+					error();
+			}
+			else if (map[y][x] == 'P')
+			{
+				if (mlx_image_to_window(game.mlx, game.assets.lumberjack, x
+						* tile_size, y * tile_size) < 0)
+					error();
+			}
+			else if (map[y][x] == 'E')
+			{
+				if (mlx_image_to_window(game.mlx, game.assets.hut, x
+						* tile_size, y * tile_size) < 0)
+					error();
+			}
+			else if (map[y][x] == 'C')
+			{
+				if (mlx_image_to_window(game.mlx, game.assets.tree, x
+						* tile_size, y * tile_size) < 0)
+					error();
+			}
+			// Add more conditions here for other characters if needed
 		}
 	}
 
+	// Enter the MLX loop
+	mlx_loop(game.mlx);
 
-	// mlx_key_hook(mlx, &my_keyhook, NULL);
+	// Clean up any leftovers
+	mlx_delete_image(game.mlx, game.assets.terrain);
+	mlx_delete_image(game.mlx, game.assets.wall);
+	mlx_delete_image(game.mlx, game.assets.lumberjack);
+	mlx_terminate(game.mlx);
 
-	// mlx_loop_hook(mlx, ft_randomize, mlx);
-	// mlx_loop_hook(mlx, ft_hook, mlx);
-	mlx_loop(mlx);
-
-	// Optional, terminate will clean up any leftovers,
-	mlx_delete_image(mlx, img);
-	mlx_delete_xpm42(xpm);
-	mlx_terminate(mlx);
 	return (EXIT_SUCCESS);
 }
