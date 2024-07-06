@@ -1,6 +1,6 @@
 # Variables
 NAME = so_long
-CC = cc
+CC = cc -g
 CFLAGS = -framework Cocoa -framework OpenGL -framework IOKit
 SRCS = main.c
 OBJDIR := obj
