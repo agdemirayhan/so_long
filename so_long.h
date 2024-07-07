@@ -6,12 +6,14 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 19:54:07 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/06 11:54:24 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/07 09:06:01 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
+
+#include "./get_next_line/get_next_line.h"
 
 // # define RED "\033[1m\033[31m"
 // # define GREEN "\033[1m\033[32m"
