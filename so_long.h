@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 19:54:07 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/07 09:06:01 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/07 09:32:16 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ typedef struct s_game
 {
 	mlx_t		*mlx;
 	t_assets	assets;
+	int			mapheight;
+	int			mapwidth;
 }				t_game;
 
 #endif

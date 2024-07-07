@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/07 09:17:15 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/07 09:38:51 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,12 +134,27 @@ int	main(int argc, char **argv)
 
 	int fd;
 	char *text;
+	int i;
+
+	i=0;
 
 	fd = open("./maps/map1.ber", O_RDONLY);
 
 	text = get_next_line(fd);
+	game.mapwidth = ft_strlen(text) -1;
+	while (text)
+	{
+		free(text);
+		text = get_next_line(fd);
+		i++;
+	}
+	
+	game.mapheight = i;
 
 	printf("\ntext:%s\n",text);
+	printf("\nwidth:%d\n",game.mapwidth);
+	printf("\nheight:%d\n",game.mapheight);
+	
 
 	// Read the map
 	map = read_map(argv[1]);
