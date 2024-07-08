@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/08 19:12:22 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/08 22:23:07 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,70 @@ mlx_image_t	*ft_asset_to_image(mlx_t *mlx, char *img_path)
 	mlx_delete_xpm42(xpm);
 	return (img);
 }
+
+int	check_args(int argc, char **argv)
+{
+	int	i;
+
+	if (argc != 2)
+		return (0);
+	i = 0;
+	while (argv[1][i])
+		i++;
+	if (argv[1][i] != 'r' || argv[1][i - 1] != 'e' || argv[1][i
+		- 2] != 'b' || argv[1][i - 3] != '.')
+		return (0);
+	return (1);
+}
+
+int	check_lines(int argc, char **argv, int *i, int fd)
+{
+	char	*text;
+
+	text = get_next_line(fd);
+	while (text[*i])
+	{
+		if (text[0] != '1')
+			return (printf("outer border must be walls"));
+		(*i)++;
+	}
+
+	return 0;
+}
+
+char	**get_map(int argc, char **argv)
+{
+	char	**map;
+	int		fd;
+	int		i;
+
+	i = 0;
+	if (!check_args(argc, argv))
+	{
+		printf("args are wrong!");
+		return (NULL);
+	}
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+	{
+		printf("cannot read the map");
+		return (NULL);
+	}
+	if (!check_lines(argc, argv, &i, fd))
+	{
+		printf("lines are broken");
+		return (NULL);
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	t_game game;
 	int fd;
 	char *text;
 	int y;
+
+	get_map(argc, argv);
 
 	if (argc != 2)
 	{
