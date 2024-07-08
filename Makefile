@@ -1,7 +1,7 @@
 # Variables
 NAME = so_long
 CC = cc
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror -fsanitize=address
 LDFLAGS = -framework Cocoa -framework OpenGL -framework IOKit -lglfw
 SRCS = main.c $(wildcard GET_NEXT_LINE/*.c) # Include all .c files in the GET_NEXT_LINE directory
 OBJDIR = obj
@@ -9,7 +9,7 @@ OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 INCDIR = include
 MLX42_PATH = MLX42
 MLX42_BUILD_PATH = $(MLX42_PATH)/build
-MLX42 = $(MLX42_BUILD_PATH)/libmlx42.a
+MLX42 = $(MLX42_BUILD_PATH)/libmlx42.a 
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 RM = rm -f
