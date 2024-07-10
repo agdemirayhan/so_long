@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/09 22:04:54 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/10 21:11:26 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,29 @@ int	check_args(int argc, char **argv)
 	return (1);
 }
 
-int	check_lines(int argc, char **argv, int *i, int fd)
+int	check_lines(int argc, char **argv, int fd, int height, int width)
 {
 	char	*text;
+	int		i;
+	int		j;
 
-	text = get_next_line(fd);
-	while (text[*i])
+	j = 0;
+	while (j < height)
 	{
-		if (text[0] != '1')
-			return (0);
-		(*i)++;
+		i = 0;
+		text = get_next_line(fd);
+		ft_printf("%s", text);
+		while (i < width)
+		{
+			if ((text[i] != '1' && (j == 0 || j == height)) || text[0] != '1'
+				|| text[width -1] != '1')
+				return (0);
+			i++;
+		}
+		if(i != width)
+			return 0;
+		j++;
+		// free(text);
 	}
 	return (1);
 }
@@ -104,22 +117,33 @@ char	**get_map(int argc, char **argv, t_game *game)
 	int		fd;
 	int		i;
 
-	i = 0;
 	if (!check_args(argc, argv))
 		error_handling("args are wrong!");
 	fd = open(argv[1], O_RDONLY);
+	get_map_height_and_width(game, fd);
 	if (fd == -1)
 		error_handling("cannot read the map");
-	if (!check_lines(argc, argv, &i, fd))
+	// Reopen the file to read the map data again
+	close(fd);
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+		error_handling("cannot read the map");
+	if (!check_lines(argc, argv, fd, game->mapheight, game->mapwidth))
 		error_handling("lines are broken");
-	get_map_height_and_width(game, fd);
+	// Reopen the file to read again from the beginning
+	close(fd);
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+		error_handling("cannot read the map");
 	map = malloc((game->mapheight + 1) * sizeof(char *));
-	if (map == NULL)
+	if (!map)
 		error_handling("Memory allocation failed");
 	i = 0;
 	map[i] = get_next_line(fd);
 	while (map[i])
+	{
 		map[++i] = get_next_line(fd);
+	}
 	map[i] = NULL;
 	close(fd);
 	return (map);
@@ -128,25 +152,17 @@ char	**get_map(int argc, char **argv, t_game *game)
 int	main(int argc, char **argv)
 {
 	t_game game;
-	int fd;
 	int y;
 	char **map;
 	int i;
 
 	map = get_map(argc, argv, &game);
-	i = 0;
-	while (map[i])
-	{
-		ft_printf("%s", map[i]);
-		free(map[i]);
-		i++;
-	}
-	free(map);
 
+	// Initialize the MLX window
 	game.mlx = mlx_init(TILESIZE * game.mapwidth, TILESIZE * game.mapheight,
 			"Test", true);
 	if (!game.mlx)
-		error();
+		error_handling("Failed to initialize mlx");
 
 	game.assets.terrain = ft_asset_to_image(game.mlx, "./temp/terrain.xpm42");
 	game.assets.wall = ft_asset_to_image(game.mlx, "./temp/tree2.xpm42");
@@ -155,34 +171,44 @@ int	main(int argc, char **argv)
 	game.assets.hut = ft_asset_to_image(game.mlx, "./temp/hut.xpm42");
 	game.assets.tree = ft_asset_to_image(game.mlx, "./temp/tree.xpm42");
 
-
-	i = 0;
-	while (map[i])
+	y = 0;
+	while (map[y])
 	{
 		for (int x = 0; x < game.mapwidth; x++)
 		{
 			if (mlx_image_to_window(game.mlx, game.assets.terrain, x * TILESIZE,
 					y * TILESIZE) < 0)
-				error();
+				error_handling("Failed to put terrain image to window");
 
-			if (map[i][x]== 'P' && mlx_image_to_window(game.mlx,
+			if (map[y][x] == 'P' && mlx_image_to_window(game.mlx,
 					game.assets.lumberjack, x * TILESIZE, y * TILESIZE) < 0)
-				error();
-			if (map[i][x]== '1' && mlx_image_to_window(game.mlx,
+				error_handling("Failed to put lumberjack image to window");
+			if (map[y][x] == '1' && mlx_image_to_window(game.mlx,
 					game.assets.wall, x * TILESIZE, y * TILESIZE) < 0)
-				error();
-			if (map[i][x]== 'C' && mlx_image_to_window(game.mlx,
+				error_handling("Failed to put wall image to window");
+			if (map[y][x] == 'C' && mlx_image_to_window(game.mlx,
 					game.assets.tree, x * TILESIZE, y * TILESIZE) < 0)
-				error();
-			if (map[i][x]== 'E' && mlx_image_to_window(game.mlx, game.assets.hut,
-					x * TILESIZE, y * TILESIZE) < 0)
-				error();
+				error_handling("Failed to put tree image to window");
+			if (map[y][x] == 'E' && mlx_image_to_window(game.mlx,
+					game.assets.hut, x * TILESIZE, y * TILESIZE) < 0)
+				error_handling("Failed to put hut image to window");
 		}
+		y++;
 	}
-	// close(fd);
 
+	// Free the map after use
+	i = 0;
+	while (map[i])
+	{
+		free(map[i]);
+		i++;
+	}
+	free(map);
+
+	// Enter the MLX loop
 	mlx_loop(game.mlx);
 
+	// Clean up images and terminate MLX
 	mlx_delete_image(game.mlx, game.assets.terrain);
 	mlx_delete_image(game.mlx, game.assets.wall);
 	mlx_delete_image(game.mlx, game.assets.lumberjack);
