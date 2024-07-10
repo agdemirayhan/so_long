@@ -6,11 +6,12 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/08 22:23:07 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/09 22:04:54 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MLX42/include/MLX42/MLX42.h"
+#include "ft_printf/ft_printf.h"
 #include "libft/libft.h"
 #include "so_long.h"
 #include <fcntl.h>
@@ -50,8 +51,8 @@ int	check_args(int argc, char **argv)
 	i = 0;
 	while (argv[1][i])
 		i++;
-	if (argv[1][i] != 'r' || argv[1][i - 1] != 'e' || argv[1][i
-		- 2] != 'b' || argv[1][i - 3] != '.')
+	if (argv[1][i - 1] != 'r' || argv[1][i - 2] != 'e' || argv[1][i - 3] != 'b'
+		|| argv[1][i - 4] != '.')
 		return (0);
 	return (1);
 }
@@ -64,14 +65,40 @@ int	check_lines(int argc, char **argv, int *i, int fd)
 	while (text[*i])
 	{
 		if (text[0] != '1')
-			return (printf("outer border must be walls"));
+			return (0);
 		(*i)++;
 	}
-
-	return 0;
+	return (1);
 }
 
-char	**get_map(int argc, char **argv)
+void	get_map_height_and_width(t_game *game, int fd)
+{
+	char	*text;
+
+	text = get_next_line(fd);
+	if (text == NULL)
+	{
+		ft_printf("Empty map file or error reading file");
+		exit(1);
+	}
+	game->mapwidth = strlen(text) - 1;
+	game->mapheight = 0;
+	while (text)
+	{
+		free(text);
+		text = get_next_line(fd);
+		game->mapheight++;
+	}
+	close(fd);
+}
+
+void	error_handling(char *str)
+{
+	ft_printf(str);
+	exit(1);
+}
+
+char	**get_map(int argc, char **argv, t_game *game)
 {
 	char	**map;
 	int		fd;
@@ -79,62 +106,42 @@ char	**get_map(int argc, char **argv)
 
 	i = 0;
 	if (!check_args(argc, argv))
-	{
-		printf("args are wrong!");
-		return (NULL);
-	}
+		error_handling("args are wrong!");
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
-	{
-		printf("cannot read the map");
-		return (NULL);
-	}
+		error_handling("cannot read the map");
 	if (!check_lines(argc, argv, &i, fd))
-	{
-		printf("lines are broken");
-		return (NULL);
-	}
+		error_handling("lines are broken");
+	get_map_height_and_width(game, fd);
+	map = malloc((game->mapheight + 1) * sizeof(char *));
+	if (map == NULL)
+		error_handling("Memory allocation failed");
+	i = 0;
+	map[i] = get_next_line(fd);
+	while (map[i])
+		map[++i] = get_next_line(fd);
+	map[i] = NULL;
+	close(fd);
+	return (map);
 }
 
 int	main(int argc, char **argv)
 {
 	t_game game;
 	int fd;
-	char *text;
 	int y;
+	char **map;
+	int i;
 
-	get_map(argc, argv);
-
-	if (argc != 2)
+	map = get_map(argc, argv, &game);
+	i = 0;
+	while (map[i])
 	{
-		fprintf(stderr, "Usage: %s <map_file>\n", argv[0]);
-		return (EXIT_FAILURE);
+		ft_printf("%s", map[i]);
+		free(map[i]);
+		i++;
 	}
-
-	fd = open(argv[1], O_RDONLY);
-	if (fd < 0)
-	{
-		perror("Failed to open map file");
-		return (EXIT_FAILURE);
-	}
-
-	text = get_next_line(fd);
-	if (!text)
-	{
-		fprintf(stderr, "Failed to read from map file\n");
-		close(fd);
-		return (EXIT_FAILURE);
-	}
-
-	game.mapwidth = strlen(text) - 1;
-	game.mapheight = 0;
-	while (text)
-	{
-		free(text);
-		text = get_next_line(fd);
-		game.mapheight++;
-	}
-	close(fd);
+	free(map);
 
 	game.mlx = mlx_init(TILESIZE * game.mapwidth, TILESIZE * game.mapheight,
 			"Test", true);
@@ -148,16 +155,9 @@ int	main(int argc, char **argv)
 	game.assets.hut = ft_asset_to_image(game.mlx, "./temp/hut.xpm42");
 	game.assets.tree = ft_asset_to_image(game.mlx, "./temp/tree.xpm42");
 
-	fd = open(argv[1], O_RDONLY);
-	if (fd < 0)
-	{
-		perror("Failed to reopen map file");
-		return (EXIT_FAILURE);
-	}
 
-	y = 0;
-	text = get_next_line(fd);
-	while (text)
+	i = 0;
+	while (map[i])
 	{
 		for (int x = 0; x < game.mapwidth; x++)
 		{
@@ -165,27 +165,21 @@ int	main(int argc, char **argv)
 					y * TILESIZE) < 0)
 				error();
 
-			if (text[x] == 'P' && mlx_image_to_window(game.mlx,
+			if (map[i][x]== 'P' && mlx_image_to_window(game.mlx,
 					game.assets.lumberjack, x * TILESIZE, y * TILESIZE) < 0)
 				error();
-			if (text[x] == '1' && mlx_image_to_window(game.mlx,
+			if (map[i][x]== '1' && mlx_image_to_window(game.mlx,
 					game.assets.wall, x * TILESIZE, y * TILESIZE) < 0)
 				error();
-			if (text[x] == 'C' && mlx_image_to_window(game.mlx,
+			if (map[i][x]== 'C' && mlx_image_to_window(game.mlx,
 					game.assets.tree, x * TILESIZE, y * TILESIZE) < 0)
 				error();
-			if (text[x] == 'E' && mlx_image_to_window(game.mlx, game.assets.hut,
+			if (map[i][x]== 'E' && mlx_image_to_window(game.mlx, game.assets.hut,
 					x * TILESIZE, y * TILESIZE) < 0)
 				error();
 		}
-		free(text);
-		text = get_next_line(fd);
-		y++;
 	}
-	close(fd);
-
-	printf("\nwidth: %d\n", game.mapwidth);
-	printf("\nheight: %d\n", game.mapheight);
+	// close(fd);
 
 	mlx_loop(game.mlx);
 

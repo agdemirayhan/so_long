@@ -1,7 +1,7 @@
 # Variables
 NAME = so_long
-CC = cc
-# CFLAGS = -g -Wall -Wextra -Werror -fsanitize=address
+CC = cc -fsanitize=address
+# CFLAGS = -g -Wall -Wextra -Werror 
 LDFLAGS = -framework Cocoa -framework OpenGL -framework IOKit -lglfw
 SRCS = main.c $(wildcard GET_NEXT_LINE/*.c) $(wildcard Libft/*.c) $(wildcard ft_printf/*.c)
 OBJDIR = obj
