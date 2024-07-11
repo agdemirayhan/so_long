@@ -27,6 +27,13 @@ static void	error(void)
 	exit(EXIT_FAILURE);
 }
 
+void	error_handling(char *str)
+{
+	ft_printf(str);
+	exit(1);
+}
+
+
 mlx_image_t	*ft_asset_to_image(mlx_t *mlx, char *img_path)
 {
 	xpm_t		*xpm;
@@ -40,6 +47,38 @@ mlx_image_t	*ft_asset_to_image(mlx_t *mlx, char *img_path)
 		error();
 	mlx_delete_xpm42(xpm);
 	return (img);
+}
+
+void check_chars(char **map)
+{
+	int p;
+	int e;
+	int c;
+	int i;
+
+	p = 0;
+	e = 0;
+	c = 0;
+	while(*map)
+	{
+		j=0;
+		while((*map)[i])
+		{
+			if(((*map)[i] == 'P' && p) || (*map)[i] == 'E' && e) )
+				error_handling("chars are not correct");
+			else if((*map)[i] == 'P')
+				p = 0;
+			else if((*map)[i] == 'E')
+				e = 0;
+			else if((*map)[i] == 'C')
+				c = 0;
+			else if(((*map)[i] != '1') || ((*map)[i] != '0'))
+				error_handling("chars are not correct");
+		}
+		map++;
+	}
+	if(!c || !p || !e)
+		error_handling("chars are not correct");
 }
 
 int	check_args(int argc, char **argv)
@@ -57,13 +96,16 @@ int	check_args(int argc, char **argv)
 	return (1);
 }
 
-int	check_lines(int argc, char **argv, int fd, int height, int width)
+
+int	check_map(int argc, char **argv, int fd, int height, int width)
 {
 	char	*text;
 	int		i;
 	int		j;
 
 	j = 0;
+		if(width < 3)
+			return 0;
 	while (j < height)
 	{
 		i = 0;
@@ -76,6 +118,7 @@ int	check_lines(int argc, char **argv, int fd, int height, int width)
 				return (0);
 			i++;
 		}
+	
 		if(i != width)
 			return 0;
 		j++;
@@ -105,11 +148,6 @@ void	get_map_height_and_width(t_game *game, int fd)
 	close(fd);
 }
 
-void	error_handling(char *str)
-{
-	ft_printf(str);
-	exit(1);
-}
 
 char	**get_map(int argc, char **argv, t_game *game)
 {
@@ -128,7 +166,7 @@ char	**get_map(int argc, char **argv, t_game *game)
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 		error_handling("cannot read the map");
-	if (!check_lines(argc, argv, fd, game->mapheight, game->mapwidth))
+	if (!check_map(argc, argv, fd, game->mapheight, game->mapwidth))
 		error_handling("lines are broken");
 	// Reopen the file to read again from the beginning
 	close(fd);
@@ -145,6 +183,7 @@ char	**get_map(int argc, char **argv, t_game *game)
 		map[++i] = get_next_line(fd);
 	}
 	map[i] = NULL;
+	check_chars(map);
 	close(fd);
 	return (map);
 }
