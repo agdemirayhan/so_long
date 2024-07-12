@@ -178,6 +178,28 @@ void	get_map_height_and_width(t_game *game, int fd)
 	close(fd);
 }
 
+char **open_map(int height)
+{
+	int		fd;
+	char	**map;
+	int		i;
+
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+		error_handling("cannot read the map");
+	map = malloc((height + 1) * sizeof(char *));
+	if (!map)
+		error_handling("Memory allocation failed");
+	i = 0;
+	map[i] = get_next_line(fd);
+	while (map[i])
+	{
+		map[++i] = get_next_line(fd);
+	}
+	map[i] = NULL;
+	return map;
+}
+
 char	**get_map(int argc, char **argv, t_game *game)
 {
 	char	**map;
@@ -188,38 +210,29 @@ char	**get_map(int argc, char **argv, t_game *game)
 
 	x = 0;
 	y = 0;
+	///////////////////////
+	// CAN BE SPLITTED IN FUNCTIONS
 	if (!check_args(argc, argv))
 		error_handling("args are wrong!");
 	fd = open(argv[1], O_RDONLY);
 	get_map_height_and_width(game, fd);
 	if (fd == -1)
 		error_handling("cannot read the map");
-	// Reopen the file to read the map data again
 	close(fd);
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 		error_handling("cannot read the map");
 	if (!check_map(argc, argv, fd, game->mapheight, game->mapwidth))
 		error_handling("lines are broken");
-	// Reopen the file to read again from the beginning
 	close(fd);
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-		error_handling("cannot read the map");
-	map = malloc((game->mapheight + 1) * sizeof(char *));
-	if (!map)
-		error_handling("Memory allocation failed");
-	i = 0;
-	map[i] = get_next_line(fd);
-	while (map[i])
-	{
-		map[++i] = get_next_line(fd);
-	}
-	map[i] = NULL;
+	///////////////////////
+	map = open_map(game->mapheight);
 	check_chars(map, game->mapwidth);
 	get_player_pos(map, &x, &y, game->mapwidth, game->mapheight);
-	ft_printf("%d\n",check_accessible(map, x, y));
+	if(!check_accessible(map, x, y))
+		error_handling("exit is not accessible!");
 	close(fd);
+	map = open_map(game->mapheight);
 	return (map);
 }
 
