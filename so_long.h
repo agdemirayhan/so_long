@@ -6,14 +6,16 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 19:54:07 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/07 09:32:16 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/12 21:51:08 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-#include "./get_next_line/get_next_line.h"
+# include "./get_next_line/get_next_line.h"
+
+# define TILESIZE 60
 
 // # define RED "\033[1m\033[31m"
 // # define GREEN "\033[1m\033[32m"
@@ -33,7 +35,7 @@ typedef struct s_assets
 	mlx_image_t	*wall;
 	mlx_image_t	*tree;
 	mlx_image_t	*terrain;
-} t_assets;
+}				t_assets;
 
 typedef struct s_game
 {
@@ -41,6 +43,10 @@ typedef struct s_game
 	t_assets	assets;
 	int			mapheight;
 	int			mapwidth;
+	int			posx;
+	int			posy;
 }				t_game;
+
+void move_up(t_game *game);
 
 #endif

@@ -3,7 +3,7 @@ NAME = so_long
 CC = cc -fsanitize=address -g
 # CFLAGS = -Wall -Wextra -Werror 
 LDFLAGS = -framework Cocoa -framework OpenGL -framework IOKit -lglfw
-SRCS = main.c $(wildcard GET_NEXT_LINE/*.c) $(wildcard Libft/*.c) $(wildcard ft_printf/*.c)
+SRCS = main.c move_utils.c $(wildcard GET_NEXT_LINE/*.c) $(wildcard Libft/*.c) $(wildcard ft_printf/*.c)
 OBJDIR = obj
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
 INCDIR = include

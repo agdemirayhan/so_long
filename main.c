@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/11 22:01:35 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/12 21:49:52 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,35 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define TILESIZE 60
-
 static void	error(void)
 {
 	puts(mlx_strerror(mlx_errno));
 	exit(EXIT_FAILURE);
+}
+
+void	my_keyhook(mlx_key_data_t keydata, void *param)
+{
+	t_game	*game;
+
+	game = param;
+	if (keydata.action == MLX_PRESS)
+	{
+		if (keydata.key == MLX_KEY_ESCAPE)
+		{
+			mlx_close_window(game->mlx);
+			ft_printf("You exit the game!");
+		}
+		if (keydata.key == MLX_KEY_W || keydata.key == MLX_KEY_UP)
+			move_up(game);
+			mlx_image_to_window(game->mlx, game->assets.lumberjack, game->posx
+					 * TILESIZE, (game->posy -1) * TILESIZE);
+		if (keydata.key == MLX_KEY_S || keydata.key == MLX_KEY_DOWN)
+			puts("Down");
+		if (keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_LEFT)
+			puts("Left");
+		if (keydata.key == MLX_KEY_D || keydata.key == MLX_KEY_RIGHT)
+			puts("Right");
+	}
 }
 
 void	error_handling(char *str)
@@ -48,15 +71,19 @@ mlx_image_t	*ft_asset_to_image(mlx_t *mlx, char *img_path)
 	return (img);
 }
 
-void	get_player_pos(char **map, int *i, int *j, int w, int h)
+void	get_player_pos(char **map, int *i, int *j, t_game *game)
 {
-	while (*i < h)
+	while (*i < game->mapheight)
 	{
 		*j = 0;
-		while (*j < w)
+		while (*j < game->mapwidth)
 		{
 			if (map[*i][*j] == 'P')
+			{
+				game->posx = *j;
+				game->posy = *i;
 				return ;
+			}
 			(*j)++;
 		}
 		(*i)++;
@@ -77,7 +104,35 @@ int	check_accessible(char **map, int i, int j)
 		is_acc += check_accessible(map, i, j - 1);
 	}
 	is_acc += map[i][j] == 'E';
-	return is_acc;
+	return (is_acc);
+}
+
+int	count_chars(char **map, int *p, int *e, int width)
+{
+	int	c;
+	int	i;
+
+	c = 0;
+	while (*map)
+	{
+		i = 0;
+		while (i < width)
+		{
+			if (((*map)[i] == 'P' && *p) || ((*map)[i] == 'E' && *e))
+				error_handling("chars are not correct");
+			else if ((*map)[i] == 'P')
+				*p = 1;
+			else if ((*map)[i] == 'E')
+				*e = 1;
+			else if ((*map)[i] == 'C')
+				c++;
+			else if (((*map)[i] != '1') && ((*map)[i] != '0'))
+				error_handling("chars are not correct3");
+			i++;
+		}
+		map++;
+	}
+	return (c);
 }
 
 void	check_chars(char **map, int width)
@@ -89,26 +144,7 @@ void	check_chars(char **map, int width)
 
 	p = 0;
 	e = 0;
-	c = 0;
-	while (*map)
-	{
-		i = 0;
-		while (i < width)
-		{
-			if (((*map)[i] == 'P' && p) || ((*map)[i] == 'E' && e))
-				error_handling("chars are not correct");
-			else if ((*map)[i] == 'P')
-				p = 1;
-			else if ((*map)[i] == 'E')
-				e = 1;
-			else if ((*map)[i] == 'C')
-				c++;
-			else if (((*map)[i] != '1') && ((*map)[i] != '0'))
-				error_handling("chars are not correct3");
-			i++;
-		}
-		map++;
-	}
+	c = count_chars(map, &p, &e, width);
 	if (!c || !p || !e)
 		error_handling("chars are not correct");
 }
@@ -128,28 +164,28 @@ int	check_args(int argc, char **argv)
 	return (1);
 }
 
-int	check_map(int argc, char **argv, int fd, int height, int width)
+int	check_borders(int argc, char **argv, int fd, t_game *game)
 {
 	char	*text;
 	int		i;
 	int		j;
 
 	j = 0;
-	if (width < 3)
+	if (game->mapwidth < 3)
 		return (0);
-	while (j < height)
+	while (j < game->mapheight)
 	{
 		i = 0;
 		text = get_next_line(fd);
 		ft_printf("%s", text);
-		while (i < width)
+		while (i < game->mapwidth)
 		{
-			if ((text[i] != '1' && (j == 0 || j == height)) || text[0] != '1'
-				|| text[width - 1] != '1')
+			if ((text[i] != '1' && (j == 0 || j == game->mapheight))
+				|| text[0] != '1' || text[game->mapwidth - 1] != '1')
 				return (0);
 			i++;
 		}
-		if (i != width)
+		if (i != game->mapwidth)
 			return (0);
 		j++;
 		// free(text);
@@ -178,7 +214,7 @@ void	get_map_height_and_width(t_game *game, int fd)
 	close(fd);
 }
 
-char **open_map(int height)
+char	**open_map(char **argv, int height)
 {
 	int		fd;
 	char	**map;
@@ -197,7 +233,24 @@ char **open_map(int height)
 		map[++i] = get_next_line(fd);
 	}
 	map[i] = NULL;
-	return map;
+	return (map);
+}
+
+void	check_map(int argc, char **argv, t_game *game, int fd)
+{
+	if (!check_args(argc, argv))
+		error_handling("args are wrong!");
+	fd = open(argv[1], O_RDONLY);
+	get_map_height_and_width(game, fd);
+	if (fd == -1)
+		error_handling("cannot read the map");
+	close(fd);
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+		error_handling("cannot read the map");
+	if (!check_borders(argc, argv, fd, game))
+		error_handling("lines are broken");
+	close(fd);
 }
 
 char	**get_map(int argc, char **argv, t_game *game)
@@ -212,27 +265,15 @@ char	**get_map(int argc, char **argv, t_game *game)
 	y = 0;
 	///////////////////////
 	// CAN BE SPLITTED IN FUNCTIONS
-	if (!check_args(argc, argv))
-		error_handling("args are wrong!");
-	fd = open(argv[1], O_RDONLY);
-	get_map_height_and_width(game, fd);
-	if (fd == -1)
-		error_handling("cannot read the map");
-	close(fd);
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-		error_handling("cannot read the map");
-	if (!check_map(argc, argv, fd, game->mapheight, game->mapwidth))
-		error_handling("lines are broken");
-	close(fd);
+	check_map(argc, argv, game, fd);
 	///////////////////////
-	map = open_map(game->mapheight);
+	map = open_map(argv, game->mapheight);
 	check_chars(map, game->mapwidth);
-	get_player_pos(map, &x, &y, game->mapwidth, game->mapheight);
-	if(!check_accessible(map, x, y))
+	get_player_pos(map, &x, &y, game);
+	if (!check_accessible(map, x, y))
 		error_handling("exit is not accessible!");
 	close(fd);
-	map = open_map(game->mapheight);
+	map = open_map(argv, game->mapheight);
 	return (map);
 }
 
@@ -293,6 +334,7 @@ int	main(int argc, char **argv)
 	free(map);
 
 	// Enter the MLX loop
+	mlx_key_hook(game.mlx, &my_keyhook, &game);
 	mlx_loop(game.mlx);
 
 	// Clean up images and terminate MLX
