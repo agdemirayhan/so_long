@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 21:47:27 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/13 17:42:28 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/13 18:41:44 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,101 +63,114 @@
 
 void	move_up(t_game *game)
 {
-	if (game->assets.lumberjack)
-		mlx_delete_image(game->mlx, game->assets.lumberjack);
-	ft_printf("posx:%d\n", game->posx);
-	ft_printf("posy:%d\n", game->posy);
-	game->map[game->posx][game->posy] = '0';
-	game->map[game->posx][game->posy - 1] = 'P';
-	game->posy -= 1;
-	ft_printf("posx:%d\n", game->posx);
-	ft_printf("posy:%d\n", game->posy);
-	game->assets.lumberjack = ft_asset_to_image(game->mlx,
-			"./temp/lumberjack.xpm42");
-	if (!game->assets.lumberjack)
+	if (game->map[game->posx][game->posy - 1] != '1')
 	{
-		// Handle error (e.g., print error message, exit, etc.)
-		puts("Error loading image");
-		return ;
+		if (game->assets.lumberjack)
+			mlx_delete_image(game->mlx, game->assets.lumberjack);
+		ft_printf("posx:%d\n", game->posx);
+		ft_printf("posy:%d\n", game->posy);
+		game->map[game->posx][game->posy] = '0';
+		game->map[game->posx][game->posy - 1] = 'P';
+		game->posy -= 1;
+		ft_printf("posx:%d\n", game->posx);
+		ft_printf("posy:%d\n", game->posy);
+		game->assets.lumberjack = ft_asset_to_image(game->mlx,
+				"./temp/lumberjack.xpm42");
+		if (!game->assets.lumberjack)
+		{
+			// Handle error (e.g., print error message, exit, etc.)
+			puts("Error loading image");
+			return ;
+		}
+		mlx_image_to_window(game->mlx, game->assets.lumberjack, game->posx
+			* TILESIZE, game->posy * TILESIZE);
+		puts("UP");
 	}
-	mlx_image_to_window(game->mlx, game->assets.lumberjack, game->posx
-		* TILESIZE, game->posy * TILESIZE);
-	puts("UP");
 }
 
 void	move_down(t_game *game)
 {
-	if (game->assets.lumberjack)
-		mlx_delete_image(game->mlx, game->assets.lumberjack);
-	ft_printf("posx:%d\n", game->posx);
-	ft_printf("posy:%d\n", game->posy);
-	game->map[game->posx][game->posy] = '0';
-	game->map[game->posx][game->posy + 1] = 'P';
-	game->posy += 1;
-	ft_printf("posx:%d\n", game->posx);
-	ft_printf("posy:%d\n", game->posy);
-	game->assets.lumberjack = ft_asset_to_image(game->mlx,
-			"./temp/lumberjack.xpm42");
-	if (!game->assets.lumberjack)
+	printf("height:%d\nposx:%d\nposy:%d",game->mapheight,game->posx,game->posy);
+	if (game->map[game->posx][game->posy + 1] != '1')
 	{
-		// Handle error (e.g., print error message, exit, etc.)
-		puts("Error loading image");
-		return ;
+		if (game->assets.lumberjack)
+			mlx_delete_image(game->mlx, game->assets.lumberjack);
+		ft_printf("posx:%d\n", game->posx);
+		ft_printf("posy:%d\n", game->posy);
+		game->map[game->posx][game->posy] = '0';
+		game->map[game->posx][game->posy + 1] = 'P';
+		game->posy += 1;
+		ft_printf("posx:%d\n", game->posx);
+		ft_printf("posy:%d\n", game->posy);
+		game->assets.lumberjack = ft_asset_to_image(game->mlx,
+				"./temp/lumberjack.xpm42");
+		if (!game->assets.lumberjack)
+		{
+			// Handle error (e.g., print error message, exit, etc.)
+			puts("Error loading image");
+			return ;
+		}
+		mlx_image_to_window(game->mlx, game->assets.lumberjack, game->posx
+			* TILESIZE, game->posy * TILESIZE);
+		puts("UP");
 	}
-	mlx_image_to_window(game->mlx, game->assets.lumberjack, game->posx
-		* TILESIZE, game->posy * TILESIZE);
-	puts("UP");
 }
 
 void	move_left(t_game *game)
 {
-	if (game->assets.lumberjack)
-		mlx_delete_image(game->mlx, game->assets.lumberjack);
-	ft_printf("posx:%d\n", game->posx);
-	ft_printf("posy:%d\n", game->posy);
-	game->map[game->posx][game->posy] = '0';
-	game->map[game->posx - 1][game->posy] = 'P';
-	game->posx -= 1;
-	ft_printf("posx:%d\n", game->posx);
-	ft_printf("posy:%d\n", game->posy);
-	game->assets.lumberjack = ft_asset_to_image(game->mlx,
-			"./temp/lumberjack.xpm42");
-	if (!game->assets.lumberjack)
+	if (game->map[game->posx - 1][game->posy] != '1')
 	{
-		// Handle error (e.g., print error message, exit, etc.)
-		puts("Error loading image");
-		return ;
+		if (game->assets.lumberjack)
+			mlx_delete_image(game->mlx, game->assets.lumberjack);
+		ft_printf("posx:%d\n", game->posx);
+		ft_printf("posy:%d\n", game->posy);
+		game->map[game->posx][game->posy] = '0';
+		game->map[game->posx - 1][game->posy] = 'P';
+		game->posx -= 1;
+		ft_printf("posx:%d\n", game->posx);
+		ft_printf("posy:%d\n", game->posy);
+		game->assets.lumberjack = ft_asset_to_image(game->mlx,
+				"./temp/lumberjack.xpm42");
+		if (!game->assets.lumberjack)
+		{
+			// Handle error (e.g., print error message, exit, etc.)
+			puts("Error loading image");
+			return ;
+		}
+		mlx_image_to_window(game->mlx, game->assets.lumberjack, game->posx
+			* TILESIZE, game->posy * TILESIZE);
+		puts("UP");
 	}
-	mlx_image_to_window(game->mlx, game->assets.lumberjack, game->posx
-		* TILESIZE, game->posy * TILESIZE);
-	puts("UP");
 }
 
 void	move_right(t_game *game)
 {
-	if (game->assets.lumberjack)
-		mlx_delete_image(game->mlx, game->assets.lumberjack);
-
-	ft_printf("posx:%d\n", game->posx);
-	ft_printf("posy:%d\n", game->posy);
-
-	game->map[game->posx][game->posy] = '0';
-	game->map[game->posx + 1][game->posy] = 'P';
-	game->posx += 1;
-
-	ft_printf("posx:%d\n", game->posx);
-	ft_printf("posy:%d\n", game->posy);
-
-	game->assets.lumberjack = ft_asset_to_image(game->mlx,
-			"./temp/lumberjack.xpm42");
-	if (!game->assets.lumberjack)
+	if (game->map[game->posx + 1][game->posy] != '1')
 	{
-		// Handle error (e.g., print error message, exit, etc.)
-		puts("Error loading image");
-		return ;
-	}
+		if (game->assets.lumberjack)
+			mlx_delete_image(game->mlx, game->assets.lumberjack);
 
-	mlx_image_to_window(game->mlx, game->assets.lumberjack, game->posx
-		* TILESIZE, game->posy * TILESIZE);
-	puts("UP");
+		ft_printf("posx:%d\n", game->posx);
+		ft_printf("posy:%d\n", game->posy);
+
+		game->map[game->posx][game->posy] = '0';
+		game->map[game->posx + 1][game->posy] = 'P';
+		game->posx += 1;
+
+		ft_printf("posx:%d\n", game->posx);
+		ft_printf("posy:%d\n", game->posy);
+
+		game->assets.lumberjack = ft_asset_to_image(game->mlx,
+				"./temp/lumberjack.xpm42");
+		if (!game->assets.lumberjack)
+		{
+			// Handle error (e.g., print error message, exit, etc.)
+			puts("Error loading image");
+			return ;
+		}
+
+		mlx_image_to_window(game->mlx, game->assets.lumberjack, game->posx
+			* TILESIZE, game->posy * TILESIZE);
+		puts("UP");
+	}
 }

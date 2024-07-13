@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/13 17:50:55 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/13 19:20:23 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,20 @@ static void	error(void)
 	exit(EXIT_FAILURE);
 }
 
+static void	ft_hook(void *param)
+{
+	t_game *game = param;
+
+	printf("posx: %d | posy: %d\n", game->posx, game->posy);
+}
+
 void	my_keyhook(mlx_key_data_t keydata, void *param)
 {
 	t_game	*game;
 
 	game = (t_game *)param;
-	// ft_printf("posx:%d", game->posx);
-	// ft_printf("posy:%d", game->posy);
+	ft_printf("posx:%d", game->posx);
+	ft_printf("posy:%d", game->posy);
 	if (keydata.action == MLX_PRESS)
 	{
 		// if (keydata.key == MLX_KEY_ESCAPE)
@@ -40,7 +47,10 @@ void	my_keyhook(mlx_key_data_t keydata, void *param)
 		// 	mlx_close_window(game->mlx);
 		// }
 		if (keydata.key == MLX_KEY_W || keydata.key == MLX_KEY_UP)
+		{
+			ft_printf("TEST");
 			move_up(game);
+		}
 		if (keydata.key == MLX_KEY_S || keydata.key == MLX_KEY_DOWN)
 			move_down(game);
 		if (keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_LEFT)
@@ -291,6 +301,7 @@ int	main(int argc, char **argv)
 	int i;
 
 	game.map = get_map(argc, argv, &game);
+	printf("\n%d\n", game.posx);
 
 	// Initialize the MLX window
 	game.mlx = mlx_init(TILESIZE * game.mapwidth, TILESIZE * game.mapheight,
@@ -334,6 +345,7 @@ int	main(int argc, char **argv)
 
 	// mlx_loop_hook(game.mlx, &hook, &game);
 	mlx_key_hook(game.mlx, &my_keyhook, &game);
+	// mlx_loop_hook(game.mlx, &ft_hook, &game);
 	mlx_loop(game.mlx);
 
 	// Clean up images and terminate MLX
@@ -344,13 +356,13 @@ int	main(int argc, char **argv)
 	mlx_delete_image(game.mlx, game.assets.tree);
 	mlx_terminate(game.mlx);
 	// Free the map after use
-	i = 0;
-	while (game.map[i])
-	{
-		free(game.map[i]);
-		i++;
-	}
-	free(game.map);
+	// i = 0;
+	// while (game.map[i])
+	// {
+	// 	free(game.map[i]);
+	// 	i++;
+	// }
+	// free(game.map);
 
 	return (EXIT_SUCCESS);
 }
