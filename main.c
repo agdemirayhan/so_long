@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/12 21:49:52 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/13 09:30:00 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,26 +27,28 @@ static void	error(void)
 
 void	my_keyhook(mlx_key_data_t keydata, void *param)
 {
-	t_game	*game;
+	// t_game	*game;
 
-	game = param;
+	// game = param;
 	if (keydata.action == MLX_PRESS)
 	{
-		if (keydata.key == MLX_KEY_ESCAPE)
-		{
-			mlx_close_window(game->mlx);
-			ft_printf("You exit the game!");
-		}
+		// if (keydata.key == MLX_KEY_ESCAPE)
+		// {
+		// 	puts("exit");
+		// 	mlx_close_window(game->mlx);
+		// }
 		if (keydata.key == MLX_KEY_W || keydata.key == MLX_KEY_UP)
-			move_up(game);
-			mlx_image_to_window(game->mlx, game->assets.lumberjack, game->posx
-					 * TILESIZE, (game->posy -1) * TILESIZE);
-		if (keydata.key == MLX_KEY_S || keydata.key == MLX_KEY_DOWN)
-			puts("Down");
-		if (keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_LEFT)
-			puts("Left");
-		if (keydata.key == MLX_KEY_D || keydata.key == MLX_KEY_RIGHT)
-			puts("Right");
+		{
+			puts("UPp");
+			ft_printf("test");
+			// move_up(game);
+		}
+		// if (keydata.key == MLX_KEY_S || keydata.key == MLX_KEY_DOWN)
+		// 	puts("Down");
+		// if (keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_LEFT)
+		// 	puts("Left");
+		// if (keydata.key == MLX_KEY_D || keydata.key == MLX_KEY_RIGHT)
+		// 	puts("Right");
 	}
 }
 
@@ -284,7 +286,7 @@ int	main(int argc, char **argv)
 	char **map;
 	int i;
 
-	map = get_map(argc, argv, &game);
+	game.map = get_map(argc, argv, &game);
 
 	// Initialize the MLX window
 	game.mlx = mlx_init(TILESIZE * game.mapwidth, TILESIZE * game.mapheight,
@@ -300,7 +302,7 @@ int	main(int argc, char **argv)
 	game.assets.tree = ft_asset_to_image(game.mlx, "./temp/tree.xpm42");
 
 	y = 0;
-	while (map[y])
+	while (game.map[y])
 	{
 		for (int x = 0; x < game.mapwidth; x++)
 		{
@@ -308,33 +310,24 @@ int	main(int argc, char **argv)
 					y * TILESIZE) < 0)
 				error_handling("Failed to put terrain image to window");
 
-			if (map[y][x] == 'P' && mlx_image_to_window(game.mlx,
+			if (game.map[y][x] == 'P' && mlx_image_to_window(game.mlx,
 					game.assets.lumberjack, x * TILESIZE, y * TILESIZE) < 0)
 				error_handling("Failed to put lumberjack image to window");
-			if (map[y][x] == '1' && mlx_image_to_window(game.mlx,
+			if (game.map[y][x] == '1' && mlx_image_to_window(game.mlx,
 					game.assets.wall, x * TILESIZE, y * TILESIZE) < 0)
 				error_handling("Failed to put wall image to window");
-			if (map[y][x] == 'C' && mlx_image_to_window(game.mlx,
+			if (game.map[y][x] == 'C' && mlx_image_to_window(game.mlx,
 					game.assets.tree, x * TILESIZE, y * TILESIZE) < 0)
 				error_handling("Failed to put tree image to window");
-			if (map[y][x] == 'E' && mlx_image_to_window(game.mlx,
+			if (game.map[y][x] == 'E' && mlx_image_to_window(game.mlx,
 					game.assets.hut, x * TILESIZE, y * TILESIZE) < 0)
 				error_handling("Failed to put hut image to window");
 		}
 		y++;
 	}
 
-	// Free the map after use
-	i = 0;
-	while (map[i])
-	{
-		free(map[i]);
-		i++;
-	}
-	free(map);
-
 	// Enter the MLX loop
-	mlx_key_hook(game.mlx, &my_keyhook, &game);
+	mlx_key_hook(game.mlx, &my_keyhook, NULL);
 	mlx_loop(game.mlx);
 
 	// Clean up images and terminate MLX
@@ -344,6 +337,14 @@ int	main(int argc, char **argv)
 	mlx_delete_image(game.mlx, game.assets.hut);
 	mlx_delete_image(game.mlx, game.assets.tree);
 	mlx_terminate(game.mlx);
+	// Free the map after use
+	i = 0;
+	while (game.map[i])
+	{
+		free(game.map[i]);
+		i++;
+	}
+	free(game.map);
 
 	return (EXIT_SUCCESS);
 }

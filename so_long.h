@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 19:54:07 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/12 21:51:08 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/13 08:58:01 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,11 @@ typedef struct s_game
 	int			mapwidth;
 	int			posx;
 	int			posy;
+	char		**map;
 }				t_game;
 
-void move_up(t_game *game);
+void			move_up(t_game *game);
+void			error_handling(char *str);
+mlx_image_t	*ft_asset_to_image(mlx_t *mlx, char *img_path);
 
 #endif
