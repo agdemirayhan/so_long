@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/14 14:48:54 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/14 17:09:11 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,10 @@ static void	error(void)
 	exit(EXIT_FAILURE);
 }
 
-void	ft_image_to_window(t_game *game, int x, int y)
+void	first_image_to_window(t_game *game, int x, int y)
 {
-	if (y != 0 || x != 0)
-		mlx_image_to_window(game->mlx, game->assets.terrain, x * TILESIZE, y
-			* TILESIZE);
+	mlx_image_to_window(game->mlx, game->assets.terrain, x * TILESIZE, y
+		* TILESIZE);
 	if (game->map[y][x] == '1')
 		mlx_image_to_window(game->mlx, game->assets.wall, x * TILESIZE, y
 			* TILESIZE);
@@ -42,28 +41,50 @@ void	ft_image_to_window(t_game *game, int x, int y)
 	else if (game->map[y][x] == 'C')
 		mlx_image_to_window(game->mlx, game->assets.tree, x * TILESIZE, y
 			* TILESIZE);
-	if (y == 0 && x == 0)
-		mlx_image_to_window(game->mlx, game->assets.terrain, x * TILESIZE, y
+}
+
+void	image_to_window(t_game *game, int x, int y)
+{
+	mlx_image_to_window(game->mlx, game->assets.terrain, x * TILESIZE, y
+		* TILESIZE);
+	if (game->map[y][x] == '1')
+		mlx_image_to_window(game->mlx, game->assets.wall, x * TILESIZE, y
+			* TILESIZE);
+	else if (game->map[y][x] == 'E')
+		mlx_image_to_window(game->mlx, game->assets.hut, x * TILESIZE, y
+			* TILESIZE);
+	else if (game->map[y][x] == 'P')
+		mlx_image_to_window(game->mlx, game->assets.lumberjack, x * TILESIZE, y
+			* TILESIZE);
+	else if (game->map[y][x] == 'C')
+		mlx_image_to_window(game->mlx, game->assets.tree, x * TILESIZE, y
 			* TILESIZE);
 }
 
 void	clean_old_assets(t_game *game)
 {
-	mlx_delete_image(game->mlx, game->assets.terrain);
-	mlx_delete_image(game->mlx, game->assets.wall);
 	mlx_delete_image(game->mlx, game->assets.lumberjack);
-	mlx_delete_image(game->mlx, game->assets.hut);
 	mlx_delete_image(game->mlx, game->assets.tree);
 }
 
 void	load_assets(t_game *game)
 {
-	game->assets.terrain = ft_asset_to_image(game->mlx, "./temp/terrain.xpm42");
-	game->assets.wall = ft_asset_to_image(game->mlx, "./temp/tree2.xpm42");
-	game->assets.lumberjack = ft_asset_to_image(game->mlx,
-			"./temp/lumberjack.xpm42");
-	game->assets.hut = ft_asset_to_image(game->mlx, "./temp/hut.xpm42");
-	game->assets.tree = ft_asset_to_image(game->mlx, "./temp/tree.xpm42");
+	if (game->status == INIT)
+	{
+		game->assets.terrain = ft_asset_to_image(game->mlx,
+				"./temp/terrain.xpm42");
+		game->assets.wall = ft_asset_to_image(game->mlx, "./temp/tree2.xpm42");
+		game->assets.lumberjack = ft_asset_to_image(game->mlx,
+				"./temp/lumberjack.xpm42");
+		game->assets.hut = ft_asset_to_image(game->mlx, "./temp/hut.xpm42");
+		game->assets.tree = ft_asset_to_image(game->mlx, "./temp/tree.xpm42");
+	}
+	else
+	{
+		game->assets.lumberjack = ft_asset_to_image(game->mlx,
+				"./temp/lumberjack.xpm42");
+		game->assets.tree = ft_asset_to_image(game->mlx, "./temp/tree.xpm42");
+	}
 }
 
 void	put_image_in_map(t_game *game)
@@ -72,14 +93,17 @@ void	put_image_in_map(t_game *game)
 	int	y;
 
 	y = 0;
-	// clean_old_assets(game);
-	// load_assets(game);
+	clean_old_assets(game);
+	load_assets(game);
 	while (y < game->mapheight)
 	{
 		x = 0;
 		while (x < game->mapwidth)
 		{
-			ft_image_to_window(game, x, y);
+			if (game->status == INIT)
+				first_image_to_window(game, x, y);
+			else
+				image_to_window(game, x, y);
 			x++;
 		}
 		y++;
@@ -101,30 +125,31 @@ void	my_keyhook(mlx_key_data_t keydata, void *param)
 
 	game = param;
 	ft_printf("TEST");
-	if (keydata.action == MLX_PRESS)
+	put_image_in_map(game);
+	if (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT)
 	{
-		// if (keydata.key == MLX_KEY_ESCAPE)
-		// {
-		// 	puts("exit");
-		// 	mlx_close_window(game->mlx);
-		// }
-		if (keydata.key == MLX_KEY_W || keydata.key == MLX_KEY_UP)
-		{
-			ft_printf("TEST");
-			move_up(game);
-		}
-		if (keydata.key == MLX_KEY_S || keydata.key == MLX_KEY_DOWN)
-			move_down(game);
-		if (keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_LEFT)
-			move_left(game);
-		if (keydata.key == MLX_KEY_D || keydata.key == MLX_KEY_RIGHT)
-			move_right(game);
-		// if (keydata.key == MLX_KEY_S || keydata.key == MLX_KEY_DOWN)
-		// 	puts("Down");
-		// if (keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_LEFT)
-		// 	puts("Left");
-		// if (keydata.key == MLX_KEY_D || keydata.key == MLX_KEY_RIGHT)
-		// 	puts("Right");
+	// if (keydata.key == MLX_KEY_ESCAPE)
+	// {
+	// 	puts("exit");
+	// 	mlx_close_window(game->mlx);
+	// }
+	if (keydata.key == MLX_KEY_W || keydata.key == MLX_KEY_UP)
+	{
+		ft_printf("TEST");
+		move_up(game);
+	}
+	if (keydata.key == MLX_KEY_S || keydata.key == MLX_KEY_DOWN)
+		move_down(game);
+	if (keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_LEFT)
+		move_left(game);
+	if (keydata.key == MLX_KEY_D || keydata.key == MLX_KEY_RIGHT)
+		move_right(game);
+	// if (keydata.key == MLX_KEY_S || keydata.key == MLX_KEY_DOWN)
+	// 	puts("Down");
+	// if (keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_LEFT)
+	// 	puts("Left");
+	// if (keydata.key == MLX_KEY_D || keydata.key == MLX_KEY_RIGHT)
+	// 	puts("Right");
 	}
 }
 
@@ -363,6 +388,7 @@ int	main(int argc, char **argv)
 
 	game.map = get_map(argc, argv, &game);
 	game.movecount = 0;
+	game.status = INIT;
 
 	i = 0;
 	// while(game.map[i])
@@ -376,9 +402,11 @@ int	main(int argc, char **argv)
 	if (!game.mlx)
 		error_handling("Failed to initialize mlx");
 
-	load_assets(&game);
+	put_image_in_map(&game);
+	game.status = INGAME;
 	// ft_printf("")
-	// game.assets.terrain = ft_asset_to_image(game.mlx, "./temp/terrain.xpm42");
+	// game.assets.terrain = ft_asset_to_image(game.mlx,
+	// "./temp/terrain.xpm42");
 	// game.assets.wall = ft_asset_to_image(game.mlx, "./temp/tree2.xpm42");
 	// game.assets.lumberjack = ft_asset_to_image(game.mlx,
 	// 		"./temp/lumberjack.xpm42");
@@ -413,7 +441,7 @@ int	main(int argc, char **argv)
 	// Enter the MLX loop
 
 	// mlx_loop_hook(game.mlx, &hook, &game);
-	mlx_loop_hook(game.mlx, &ft_hook, &game);
+	// mlx_loop_hook(game.mlx, &ft_hook, &game);
 	mlx_key_hook(game.mlx, &my_keyhook, &game);
 	mlx_loop(game.mlx);
 
