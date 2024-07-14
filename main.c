@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/14 17:09:11 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/14 18:58:04 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,13 @@ void	image_to_window(t_game *game, int x, int y)
 	else if (game->map[y][x] == 'P')
 		mlx_image_to_window(game->mlx, game->assets.lumberjack, x * TILESIZE, y
 			* TILESIZE);
+	else if (game->map[y][x] == 'X')
+	{
+		mlx_image_to_window(game->mlx, game->assets.hut, x * TILESIZE, y
+			* TILESIZE);
+		mlx_image_to_window(game->mlx, game->assets.lumberjack, x * TILESIZE, y
+			* TILESIZE);
+	}
 	else if (game->map[y][x] == 'C')
 		mlx_image_to_window(game->mlx, game->assets.tree, x * TILESIZE, y
 			* TILESIZE);
@@ -124,32 +131,27 @@ void	my_keyhook(mlx_key_data_t keydata, void *param)
 	t_game	*game;
 
 	game = param;
-	ft_printf("TEST");
 	put_image_in_map(game);
 	if (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT)
 	{
-	// if (keydata.key == MLX_KEY_ESCAPE)
-	// {
-	// 	puts("exit");
-	// 	mlx_close_window(game->mlx);
-	// }
-	if (keydata.key == MLX_KEY_W || keydata.key == MLX_KEY_UP)
-	{
-		ft_printf("TEST");
-		move_up(game);
-	}
-	if (keydata.key == MLX_KEY_S || keydata.key == MLX_KEY_DOWN)
-		move_down(game);
-	if (keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_LEFT)
-		move_left(game);
-	if (keydata.key == MLX_KEY_D || keydata.key == MLX_KEY_RIGHT)
-		move_right(game);
-	// if (keydata.key == MLX_KEY_S || keydata.key == MLX_KEY_DOWN)
-	// 	puts("Down");
-	// if (keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_LEFT)
-	// 	puts("Left");
-	// if (keydata.key == MLX_KEY_D || keydata.key == MLX_KEY_RIGHT)
-	// 	puts("Right");
+		if (keydata.key == MLX_KEY_ESCAPE)
+		{
+			puts("exit");
+			mlx_close_window(game->mlx);
+		}
+		if (keydata.key == MLX_KEY_W || keydata.key == MLX_KEY_UP)
+			move_up(game);
+		if (keydata.key == MLX_KEY_S || keydata.key == MLX_KEY_DOWN)
+			move_down(game);
+		if (keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_LEFT)
+			move_left(game);
+		if (keydata.key == MLX_KEY_D || keydata.key == MLX_KEY_RIGHT)
+			move_right(game);
+		if (game->status == END)
+		{
+			ft_printf("Congratulations!\n");
+			mlx_close_window(game->mlx);
+		}
 	}
 }
 
@@ -238,7 +240,7 @@ int	count_chars(char **map, int *p, int *e, int width)
 	return (c);
 }
 
-void	check_chars(char **map, int width)
+int	check_chars(char **map, int width)
 {
 	int	p;
 	int	e;
@@ -250,6 +252,7 @@ void	check_chars(char **map, int width)
 	c = count_chars(map, &p, &e, width);
 	if (!c || !p || !e)
 		error_handling("chars are not correct");
+	return (c);
 }
 
 int	check_args(int argc, char **argv)
@@ -370,7 +373,7 @@ char	**get_map(int argc, char **argv, t_game *game)
 	check_map(argc, argv, game, fd);
 	///////////////////////
 	map = open_map(argv, game->mapheight);
-	check_chars(map, game->mapwidth);
+	game->coll = check_chars(map, game->mapwidth);
 	get_player_pos(map, &x, &y, game);
 	if (!check_accessible(map, x, y))
 		error_handling("exit is not accessible!");

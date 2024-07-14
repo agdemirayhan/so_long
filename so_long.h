@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 19:54:07 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/14 16:41:13 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/14 18:36:42 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,14 @@ typedef struct s_game
 	char		**map;
 	int			movecount;
 	int			status;
+	int 		coll;
 }				t_game;
 
 typedef enum e_state
 {
 	INIT = 0,
 	INGAME = 1,
+	END = 2,
 }				t_state;
 
 void			move_up(t_game *game);
