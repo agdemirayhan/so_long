@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/13 19:20:23 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/14 09:49:09 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@ static void	error(void)
 
 static void	ft_hook(void *param)
 {
-	t_game *game = param;
+	t_game	*game;
 
+	game = param;
 	printf("posx: %d | posy: %d\n", game->posx, game->posy);
 }
 
@@ -36,9 +37,9 @@ void	my_keyhook(mlx_key_data_t keydata, void *param)
 {
 	t_game	*game;
 
-	game = (t_game *)param;
-	ft_printf("posx:%d", game->posx);
-	ft_printf("posy:%d", game->posy);
+	game = param;
+	ft_printf("width:%d/nheight:%d/n", game->mapwidth, game->mapheight);
+	ft_printf("posx:%d/nposy:%d/n", game->posx, game->posy);
 	if (keydata.action == MLX_PRESS)
 	{
 		// if (keydata.key == MLX_KEY_ESCAPE)
@@ -49,14 +50,20 @@ void	my_keyhook(mlx_key_data_t keydata, void *param)
 		if (keydata.key == MLX_KEY_W || keydata.key == MLX_KEY_UP)
 		{
 			ft_printf("TEST");
-			move_up(game);
+			// move_up(game);
 		}
 		if (keydata.key == MLX_KEY_S || keydata.key == MLX_KEY_DOWN)
-			move_down(game);
+		{
+			// move_down(game);
+		}
 		if (keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_LEFT)
-			move_left(game);
+		{
+			// move_left(game);
+		}
 		if (keydata.key == MLX_KEY_D || keydata.key == MLX_KEY_RIGHT)
-			move_right(game);
+		{
+			// move_right(game);
+		}
 		// if (keydata.key == MLX_KEY_S || keydata.key == MLX_KEY_DOWN)
 		// 	puts("Down");
 		// if (keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_LEFT)
@@ -295,47 +302,49 @@ char	**get_map(int argc, char **argv, t_game *game)
 
 int	main(int argc, char **argv)
 {
-	t_game game;
+	t_game *game;
 	int y;
 	char **map;
 	int i;
 
-	game.map = get_map(argc, argv, &game);
-	printf("\n%d\n", game.posx);
+	game = malloc(sizeof(t_game));
+	game->map = malloc(sizeof(char **));
+	game->map = get_map(argc, argv, game);
+	ft_printf("game->mapheight:%d\n",game->mapheight);
 
 	// Initialize the MLX window
-	game.mlx = mlx_init(TILESIZE * game.mapwidth, TILESIZE * game.mapheight,
+	game->mlx = mlx_init(TILESIZE * game->mapwidth, TILESIZE * game->mapheight,
 			"Test", true);
-	if (!game.mlx)
+	if (!game->mlx)
 		error_handling("Failed to initialize mlx");
 
-	game.assets.terrain = ft_asset_to_image(game.mlx, "./temp/terrain.xpm42");
-	game.assets.wall = ft_asset_to_image(game.mlx, "./temp/tree2.xpm42");
-	game.assets.lumberjack = ft_asset_to_image(game.mlx,
+	game->assets.terrain = ft_asset_to_image(game->mlx, "./temp/terrain.xpm42");
+	game->assets.wall = ft_asset_to_image(game->mlx, "./temp/tree2.xpm42");
+	game->assets.lumberjack = ft_asset_to_image(game->mlx,
 			"./temp/lumberjack.xpm42");
-	game.assets.hut = ft_asset_to_image(game.mlx, "./temp/hut.xpm42");
-	game.assets.tree = ft_asset_to_image(game.mlx, "./temp/tree.xpm42");
+	game->assets.hut = ft_asset_to_image(game->mlx, "./temp/hut.xpm42");
+	game->assets.tree = ft_asset_to_image(game->mlx, "./temp/tree.xpm42");
 
 	y = 0;
-	while (game.map[y])
+	while (game->map[y])
 	{
-		for (int x = 0; x < game.mapwidth; x++)
+		for (int x = 0; x < game->mapwidth; x++)
 		{
-			if (mlx_image_to_window(game.mlx, game.assets.terrain, x * TILESIZE,
+			if (mlx_image_to_window(game->mlx, game->assets.terrain, x * TILESIZE,
 					y * TILESIZE) < 0)
 				error_handling("Failed to put terrain image to window");
 
-			if (game.map[y][x] == 'P' && mlx_image_to_window(game.mlx,
-					game.assets.lumberjack, x * TILESIZE, y * TILESIZE) < 0)
+			if (game->map[y][x] == 'P' && mlx_image_to_window(game->mlx,
+					game->assets.lumberjack, x * TILESIZE, y * TILESIZE) < 0)
 				error_handling("Failed to put lumberjack image to window");
-			if (game.map[y][x] == '1' && mlx_image_to_window(game.mlx,
-					game.assets.wall, x * TILESIZE, y * TILESIZE) < 0)
+			if (game->map[y][x] == '1' && mlx_image_to_window(game->mlx,
+					game->assets.wall, x * TILESIZE, y * TILESIZE) < 0)
 				error_handling("Failed to put wall image to window");
-			if (game.map[y][x] == 'C' && mlx_image_to_window(game.mlx,
-					game.assets.tree, x * TILESIZE, y * TILESIZE) < 0)
+			if (game->map[y][x] == 'C' && mlx_image_to_window(game->mlx,
+					game->assets.tree, x * TILESIZE, y * TILESIZE) < 0)
 				error_handling("Failed to put tree image to window");
-			if (game.map[y][x] == 'E' && mlx_image_to_window(game.mlx,
-					game.assets.hut, x * TILESIZE, y * TILESIZE) < 0)
+			if (game->map[y][x] == 'E' && mlx_image_to_window(game->mlx,
+					game->assets.hut, x * TILESIZE, y * TILESIZE) < 0)
 				error_handling("Failed to put hut image to window");
 		}
 		y++;
@@ -343,18 +352,18 @@ int	main(int argc, char **argv)
 
 	// Enter the MLX loop
 
-	// mlx_loop_hook(game.mlx, &hook, &game);
-	mlx_key_hook(game.mlx, &my_keyhook, &game);
-	// mlx_loop_hook(game.mlx, &ft_hook, &game);
-	mlx_loop(game.mlx);
+	// mlx_loop_hook(game->mlx, &hook, &game);
+	mlx_key_hook(game->mlx, &my_keyhook, game);
+	// mlx_loop_hook(game->mlx, &ft_hook, &game);
+	mlx_loop(game->mlx);
 
 	// Clean up images and terminate MLX
-	mlx_delete_image(game.mlx, game.assets.terrain);
-	mlx_delete_image(game.mlx, game.assets.wall);
-	mlx_delete_image(game.mlx, game.assets.lumberjack);
-	mlx_delete_image(game.mlx, game.assets.hut);
-	mlx_delete_image(game.mlx, game.assets.tree);
-	mlx_terminate(game.mlx);
+	mlx_delete_image(game->mlx, game->assets.terrain);
+	mlx_delete_image(game->mlx, game->assets.wall);
+	mlx_delete_image(game->mlx, game->assets.lumberjack);
+	mlx_delete_image(game->mlx, game->assets.hut);
+	mlx_delete_image(game->mlx, game->assets.tree);
+	mlx_terminate(game->mlx);
 	// Free the map after use
 	// i = 0;
 	// while (game.map[i])
