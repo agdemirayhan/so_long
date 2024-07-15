@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 19:54:07 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/14 18:36:42 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/15 22:35:15 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct s_game
 	char		**map;
 	int			movecount;
 	int			status;
-	int 		coll;
+	int			coll;
 }				t_game;
 
 typedef enum e_state
@@ -63,6 +63,22 @@ void			move_down(t_game *game);
 void			move_left(t_game *game);
 void			move_right(t_game *game);
 void			error_handling(char *str);
+int				check_accessible(char **map, int i, int j);
+int				count_chars(char **map, int *p, int *e, int width);
+int				check_chars(char **map, int width);
+int				check_args(int argc, char **argv);
+int				check_borders(int fd, t_game *game);
+void			image_to_window(t_game *game, int x, int y);
+void			clean_old_assets(t_game *game);
+void			load_assets(t_game *game);
+void			put_image_in_map(t_game *game);
 mlx_image_t		*ft_asset_to_image(mlx_t *mlx, char *img_path);
+void			get_player_pos(char **map, int *i, int *j, t_game *game);
+void			get_map_height_and_width(t_game *game, int fd);
+char			**open_map(char **argv, int height);
+void			check_map(int argc, char **argv, t_game *game);
+char			**get_map(int argc, char **argv, t_game *game);
+void			ft_hook(void *param);
+void			my_keyhook(mlx_key_data_t keydata, void *param);
 
 #endif
