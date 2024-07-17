@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/15 22:34:25 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/17 22:01:01 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	free_map(t_game *game)
 
 void	error_handling(char *str)
 {
+	ft_printf("Error\n");
 	ft_printf(str);
 	exit(1);
 }

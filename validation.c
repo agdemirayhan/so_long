@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 22:18:11 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/15 22:35:36 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/17 22:57:50 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	count_chars(char **map, int *p, int *e, int width)
 		while (i < width)
 		{
 			if (((*map)[i] == 'P' && *p) || ((*map)[i] == 'E' && *e))
-				error_handling("chars are not correct");
+				error_handling("Chars are not correct");
 			else if ((*map)[i] == 'P')
 				*p = 1;
 			else if ((*map)[i] == 'E')
@@ -52,7 +52,7 @@ int	count_chars(char **map, int *p, int *e, int width)
 			else if ((*map)[i] == 'C')
 				c++;
 			else if (((*map)[i] != '1') && ((*map)[i] != '0'))
-				error_handling("chars are not correct3");
+				error_handling("Chars are not correct3");
 			i++;
 		}
 		map++;
@@ -70,7 +70,7 @@ int	check_chars(char **map, int width)
 	e = 0;
 	c = count_chars(map, &p, &e, width);
 	if (!c || !p || !e)
-		error_handling("chars are not correct");
+		error_handling("Chars are not correct");
 	return (c);
 }
 

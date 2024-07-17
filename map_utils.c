@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 22:29:23 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/15 22:34:55 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/17 23:04:38 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,7 @@ void	get_map_height_and_width(t_game *game, int fd)
 
 	text = get_next_line(fd);
 	if (text == NULL)
-	{
-		ft_printf("Empty map file or error reading file");
-		exit(1);
-	}
+		error_handling("Empty map file or error reading file");
 	game->mapwidth = strlen(text) - 1;
 	game->mapheight = 0;
 	while (text)
@@ -64,7 +61,7 @@ char	**open_map(char **argv, int height)
 
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
-		error_handling("cannot read the map");
+		error_handling("Cannot read the map");
 	map = malloc((height + 1) * sizeof(char *));
 	if (!map)
 		error_handling("Memory allocation failed");
@@ -83,17 +80,17 @@ void	check_map(int argc, char **argv, t_game *game)
 	int	fd;
 
 	if (!check_args(argc, argv))
-		error_handling("args are wrong!");
+		error_handling("Args are wrong!");
 	fd = open(argv[1], O_RDONLY);
 	get_map_height_and_width(game, fd);
 	if (fd == -1)
-		error_handling("cannot read the map");
+		error_handling("Cannot read the map");
 	close(fd);
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
-		error_handling("cannot read the map");
+		error_handling("Cannot read the map");
 	if (!check_borders(fd, game))
-		error_handling("lines are broken");
+		error_handling("Borders are wrong!");
 	close(fd);
 }
 
@@ -109,8 +106,30 @@ char	**get_map(int argc, char **argv, t_game *game)
 	map = open_map(argv, game->mapheight);
 	game->coll = check_chars(map, game->mapwidth);
 	get_player_pos(map, &x, &y, game);
-	if (!check_accessible(map, x, y))
-		error_handling("exit is not accessible!");
+	accessibility(map, game, argv);
 	map = open_map(argv, game->mapheight);
 	return (map);
+}
+
+void	accessibility(char **map, t_game *game, char **argv)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (i < game->mapheight)
+	{
+		j = 0;
+		while (j < game->mapwidth)
+		{
+			if (map[i][j] == 'C' || map[i][j] == 'P')
+			{
+				if (!check_accessible(map, i, j))
+					error_handling("Collectible or Exit is not accessible!");
+				map = open_map(argv, game->mapheight);
+			}
+			(j)++;
+		}
+		(i)++;
+	}
 }
