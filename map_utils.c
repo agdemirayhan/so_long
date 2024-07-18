@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 22:29:23 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/17 23:04:38 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/18 21:51:54 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	get_map_height_and_width(t_game *game, int fd)
 		text = get_next_line(fd);
 		game->mapheight++;
 	}
+	if (game->mapwidth < 3 || game->mapheight < 3)
+		error_handling("Map is wrong!");
 	free(text);
 	close(fd);
 }
@@ -107,29 +109,7 @@ char	**get_map(int argc, char **argv, t_game *game)
 	game->coll = check_chars(map, game->mapwidth);
 	get_player_pos(map, &x, &y, game);
 	accessibility(map, game, argv);
+	free_map(map);
 	map = open_map(argv, game->mapheight);
 	return (map);
-}
-
-void	accessibility(char **map, t_game *game, char **argv)
-{
-	int i;
-	int j;
-
-	i = 0;
-	while (i < game->mapheight)
-	{
-		j = 0;
-		while (j < game->mapwidth)
-		{
-			if (map[i][j] == 'C' || map[i][j] == 'P')
-			{
-				if (!check_accessible(map, i, j))
-					error_handling("Collectible or Exit is not accessible!");
-				map = open_map(argv, game->mapheight);
-			}
-			(j)++;
-		}
-		(i)++;
-	}
 }

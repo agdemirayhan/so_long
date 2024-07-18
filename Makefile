@@ -1,6 +1,7 @@
 # Variables
 NAME = so_long
-CC = cc
+CC = cc 
+# CC = cc -fsanitize=address -g
 CFLAGS = -Wall -Wextra -Werror 
 LDFLAGS = -framework Cocoa -framework OpenGL -framework IOKit -lglfw
 SRCS = main.c \

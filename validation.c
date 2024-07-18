@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 22:18:11 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/17 22:57:50 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/18 21:52:06 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,22 +96,23 @@ int	check_borders(int fd, t_game *game)
 	int		j;
 
 	j = 0;
-	if (game->mapwidth < 3)
-		return (0);
 	while (j < game->mapheight)
 	{
 		i = 0;
 		text = get_next_line(fd);
+		if (!text)
+			return (0);
 		while (i < game->mapwidth)
 		{
-			if ((text[i] != '1' && (j == 0 || j == game->mapheight))
+			if ((text[i] != '1' && (j == 0 || j == game->mapheight - 1))
 				|| text[0] != '1' || text[game->mapwidth - 1] != '1')
-				return (0);
+				return (free(text), 0);
 			i++;
 		}
 		if (i != game->mapwidth)
-			return (0);
+			return (free(text), 0);
 		j++;
+		free(text);
 	}
 	return (1);
 }

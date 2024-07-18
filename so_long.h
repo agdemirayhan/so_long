@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 19:54:07 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/17 23:04:16 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/18 21:34:24 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,6 @@ char			**get_map(int argc, char **argv, t_game *game);
 void			ft_hook(void *param);
 void			my_keyhook(mlx_key_data_t keydata, void *param);
 void			accessibility(char **map, t_game *game, char **argv);
+void			free_map(char **map);
 
 #endif

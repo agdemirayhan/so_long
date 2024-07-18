@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/17 22:01:01 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/18 21:35:31 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,45 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void	free_map(t_game *game)
+void	accessibility(char **map, t_game *game, char **argv)
+{
+	int		i;
+	int		j;
+	char	**temp_map;
+
+	i = 0;
+	while (i < game->mapheight)
+	{
+		j = 0;
+		while (j < game->mapwidth)
+		{
+			if (map[i][j] == 'C' || map[i][j] == 'P')
+			{
+				temp_map = open_map(argv, game->mapheight);
+				if (!check_accessible(temp_map, i, j))
+				{
+					free_map(temp_map);
+					error_handling("Collectible or Exit is not accessible!");
+				}
+				free_map(temp_map);
+			}
+			(j)++;
+		}
+		(i)++;
+	}
+}
+
+void	free_map(char **map)
 {
 	int	i;
 
 	i = 0;
-	while (game->map[i] != NULL)
+	while (map[i] != NULL)
 	{
-		free(game->map[i]);
+		free(map[i]);
 		i++;
 	}
-	free(game->map);
+	free(map);
 }
 
 void	error_handling(char *str)
@@ -55,7 +83,7 @@ int	main(int argc, char **argv)
 	mlx_key_hook(game.mlx, &my_keyhook, &game);
 	mlx_loop(game.mlx);
 	clean_old_assets(&game);
-	free_map(&game);
+	free_map(game.map);
 	mlx_terminate(game.mlx);
 	return (EXIT_SUCCESS);
 }

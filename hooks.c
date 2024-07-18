@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 22:31:49 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/15 22:33:38 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/18 20:31:29 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	my_keyhook(mlx_key_data_t keydata, void *param)
 	{
 		if (keydata.key == MLX_KEY_ESCAPE)
 		{
-			puts("exit");
+			ft_printf("Exit");
 			mlx_close_window(game->mlx);
 		}
 		if (keydata.key == MLX_KEY_W || keydata.key == MLX_KEY_UP)
