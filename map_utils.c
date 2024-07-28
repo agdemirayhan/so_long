@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 22:29:23 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/18 21:51:54 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/28 15:11:32 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ void	get_map_height_and_width(t_game *game, int fd)
 
 	text = get_next_line(fd);
 	if (text == NULL)
+	{
+		free(text);
 		error_handling("Empty map file or error reading file");
+	}
 	game->mapwidth = strlen(text) - 1;
 	game->mapheight = 0;
 	while (text)
@@ -49,9 +52,9 @@ void	get_map_height_and_width(t_game *game, int fd)
 		text = get_next_line(fd);
 		game->mapheight++;
 	}
+	free(text);
 	if (game->mapwidth < 3 || game->mapheight < 3)
 		error_handling("Map is wrong!");
-	free(text);
 	close(fd);
 }
 

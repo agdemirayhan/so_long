@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 22:18:11 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/18 21:52:06 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/28 17:39:48 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 #include "ft_printf/ft_printf.h"
 #include "libft/libft.h"
 #include "so_long.h"
+#include <stdlib.h>
+
+void	check_leaks(void)
+{
+	system("leaks so_long");
+}
 
 int	check_accessible(char **map, int i, int j)
 {
@@ -101,7 +107,10 @@ int	check_borders(int fd, t_game *game)
 		i = 0;
 		text = get_next_line(fd);
 		if (!text)
+		{
+			free(text);
 			return (0);
+		}
 		while (i < game->mapwidth)
 		{
 			if ((text[i] != '1' && (j == 0 || j == game->mapheight - 1))

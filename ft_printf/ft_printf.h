@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 11:18:53 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/04/20 19:19:15 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/27 14:35:16 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <string.h>
 # include <unistd.h>
 # include <stdio.h>
+# include <stdint.h>
 
 int		ft_putstr(char const *s);
 int		ft_putnbr(int d);
