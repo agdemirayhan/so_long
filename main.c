@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/28 17:41:16 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/28 18:16:16 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,6 @@ int	main(int argc, char **argv)
 	clean_old_assets(&game);
 	free_map(game.map);
 	mlx_terminate(game.mlx);
+	atexit(check_leaks);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 22:27:02 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/15 22:34:11 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/28 18:19:44 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ void	clean_old_assets(t_game *game)
 
 void	load_assets(t_game *game)
 {
-	game->assets.terrain = ft_asset_to_image(game->mlx, "./temp/terrain.xpm42");
-	game->assets.wall = ft_asset_to_image(game->mlx, "./temp/tree2.xpm42");
+	game->assets.terrain = ft_asset_to_image(game->mlx, "./textures/terrain.xpm42");
+	game->assets.wall = ft_asset_to_image(game->mlx, "./textures/tree2.xpm42");
 	game->assets.lumberjack = ft_asset_to_image(game->mlx,
-			"./temp/lumberjack.xpm42");
-	game->assets.hut = ft_asset_to_image(game->mlx, "./temp/hut.xpm42");
-	game->assets.tree = ft_asset_to_image(game->mlx, "./temp/tree.xpm42");
+			"./textures/lumberjack.xpm42");
+	game->assets.hut = ft_asset_to_image(game->mlx, "./textures/hut.xpm42");
+	game->assets.tree = ft_asset_to_image(game->mlx, "./textures/tree.xpm42");
 }
 
 void	put_image_in_map(t_game *game)
