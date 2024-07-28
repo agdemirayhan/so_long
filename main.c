@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/18 21:35:31 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/28 17:41:16 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ int	main(int argc, char **argv)
 {
 	t_game	game;
 
+	if (LEAKS)
+		atexit(check_leaks);
 	game.map = get_map(argc, argv, &game);
 	game.movecount = 0;
 	game.status = INIT;
