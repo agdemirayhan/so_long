@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/31 22:23:46 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/31 22:38:01 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,16 @@
 #include "ft_printf/ft_printf.h"
 #include "libft/libft.h"
 #include "so_long.h"
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 
 // norminette validation.c &&norminette so_long.h &&norminette move_utils.c
 // && norminette map_utils.c &&norminette main.c &&norminette image_utils.c
 // && norminette hooks.c &&norminette ft_printf &&norminette get_next_line
 // && norminette libft
 
-// void	check_leaks(void)
-// {
-// 	system("leaks so_long");
-// }
+void	check_leaks(void)
+{
+	system("leaks so_long");
+}
 
 void	accessibility(char **map, t_game *game, char **argv)
 {
@@ -97,6 +93,5 @@ int	main(int argc, char **argv)
 	clean_old_assets(&game);
 	free_map(game.map);
 	mlx_terminate(game.mlx);
-	atexit(check_leaks);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 21:47:27 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/31 22:25:31 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/31 22:29:38 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 #include "ft_printf/ft_printf.h"
 #include "libft/libft.h"
 #include "so_long.h"
-
-// GOTTA CARE REFACTORING
 
 void	move(t_game *game, int dy, int dx)
 {

@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 22:18:11 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/31 22:23:37 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/31 22:37:21 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "ft_printf/ft_printf.h"
 #include "libft/libft.h"
 #include "so_long.h"
-#include <stdlib.h>
 
 int	check_accessible(char **map, int i, int j)
 {
