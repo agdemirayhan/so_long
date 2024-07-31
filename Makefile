@@ -1,7 +1,6 @@
 # Variables
 NAME = so_long
-# CC = cc 
-CC = clang -g
+CC = cc 
 CFLAGS = -Wall -Wextra -Werror 
 LDFLAGS =-framework Cocoa -framework OpenGL -framework IOKit -lglfw
 SRCS = main.c \

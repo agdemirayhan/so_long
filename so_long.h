@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 19:54:07 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/31 21:19:14 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/31 22:17:26 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,9 @@
 
 # include "./get_next_line/get_next_line.h"
 
-# define TILESIZE 60
-
-// # define RED "\033[1m\033[31m"
-// # define GREEN "\033[1m\033[32m"
-// # define ENDC "\033[0m"
-// # define BOLDRED "\033[31m"
-// # define UP 13
-// # define DOWN 1
-// # define LEFT 0
-// # define RIGHT 2
-// # define ESC 53
-// # define SIZE 48
+# ifndef TILESIZE
+#  define TILESIZE 60
+# endif
 
 typedef struct s_assets
 {
@@ -83,7 +74,7 @@ void			my_keyhook(mlx_key_data_t keydata, void *param);
 void			accessibility(char **map, t_game *game, char **argv);
 void			free_map(char **map);
 void			check_leaks(void);
-void	move(t_game *game, int dy, int dx);
+void			move(t_game *game, int dy, int dx);
 
 # ifndef LEAKS
 #  define LEAKS 0
