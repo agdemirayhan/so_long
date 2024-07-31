@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 11:18:53 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/27 14:35:16 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/31 22:43:47 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
-# include <stdio.h>
 # include <stdint.h>
 
 int		ft_putstr(char const *s);
