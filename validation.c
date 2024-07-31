@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 22:18:11 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/28 17:39:48 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/31 22:10:51 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 #include "so_long.h"
 #include <stdlib.h>
 
-void	check_leaks(void)
-{
-	system("leaks so_long");
-}
+// norminette validation.c &&norminette so_long.h &&norminette move_utils.c
+// 	&&norminette map_utils.c &&norminette main.c &&norminette image_utils.c
+// 	&&norminette hooks.c &&norminette ft_printf &&norminette get_next_line
+// 	&&norminette libft
 
 int	check_accessible(char **map, int i, int j)
 {
@@ -107,19 +107,16 @@ int	check_borders(int fd, t_game *game)
 		i = 0;
 		text = get_next_line(fd);
 		if (!text)
-		{
-			free(text);
 			return (0);
-		}
 		while (i < game->mapwidth)
 		{
 			if ((text[i] != '1' && (j == 0 || j == game->mapheight - 1))
-				|| text[0] != '1' || text[game->mapwidth - 1] != '1')
+				|| text[0] != '1' || text[game->mapwidth - 1] != '1'
+				|| ((((int)ft_strlen(text) - 1) != game->mapwidth)
+				&& j != game->mapheight - 1))
 				return (free(text), 0);
 			i++;
 		}
-		if (i != game->mapwidth)
-			return (free(text), 0);
 		j++;
 		free(text);
 	}

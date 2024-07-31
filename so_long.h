@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 19:54:07 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/28 17:35:23 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/31 21:19:14 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void			my_keyhook(mlx_key_data_t keydata, void *param);
 void			accessibility(char **map, t_game *game, char **argv);
 void			free_map(char **map);
 void			check_leaks(void);
+void	move(t_game *game, int dy, int dx);
 
 # ifndef LEAKS
 #  define LEAKS 0

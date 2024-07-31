@@ -1,9 +1,9 @@
 # Variables
 NAME = so_long
-CC = cc 
+# CC = cc 
+CC = clang -g
 CFLAGS = -Wall -Wextra -Werror 
 LDFLAGS =-framework Cocoa -framework OpenGL -framework IOKit -lglfw
-# LDFLAGS =-L/Users/aagdemir/LeakSanitizer -llsan -framework Cocoa -framework OpenGL -framework IOKit -lglfw
 SRCS = main.c \
        move_utils.c \
        validation.c \
@@ -71,7 +71,6 @@ fclean: clean
 re: fclean all
 
 leaks: CFLAGS += -g -DLEAKS
-# leaks: make all
 leaks: all
 
 # Declare phony targets

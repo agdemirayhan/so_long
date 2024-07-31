@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 15:01:40 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/28 18:16:16 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/07/29 21:10:24 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+void	check_leaks(void)
+{
+	system("leaks so_long");
+}
 
 void	accessibility(char **map, t_game *game, char **argv)
 {
