@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 22:18:11 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/31 22:37:21 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/08/03 12:17:31 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	count_chars(char **map, int *p, int *e, int width)
 			else if ((*map)[i] == 'C')
 				c++;
 			else if (((*map)[i] != '1') && ((*map)[i] != '0'))
-				error_handling("Chars are not correct3");
+				error_handling("Chars are not correct");
 			i++;
 		}
 		map++;
@@ -96,7 +96,7 @@ int	check_borders(int fd, t_game *game)
 	int		j;
 
 	j = 0;
-	while (j < game->mapheight)
+	while (j++ < game->mapheight)
 	{
 		i = 0;
 		text = get_next_line(fd);
@@ -104,14 +104,15 @@ int	check_borders(int fd, t_game *game)
 			return (0);
 		while (i < game->mapwidth)
 		{
-			if ((text[i] != '1' && (j == 0 || j == game->mapheight - 1))
+			if ((text[i] != '1' && (j == 1 || j == game->mapheight))
 				|| text[0] != '1' || text[game->mapwidth - 1] != '1'
 				|| ((((int)ft_strlen(text) - 1) != game->mapwidth)
-					&& j != game->mapheight - 1))
+					&& j != game->mapheight)
+				|| ((((int)ft_strlen(text)) != game->mapwidth)
+					&& j == game->mapheight))
 				return (free(text), 0);
 			i++;
 		}
-		j++;
 		free(text);
 	}
 	return (1);

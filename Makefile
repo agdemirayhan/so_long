@@ -1,14 +1,14 @@
 # Variables
 NAME = so_long
-CC = cc 
-CFLAGS = -Wall -Wextra -Werror 
-LDFLAGS =-framework Cocoa -framework OpenGL -framework IOKit -lglfw
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
+LDFLAGS = -framework Cocoa -framework OpenGL -framework IOKit -lglfw
 SRCS = main.c \
        move_utils.c \
        validation.c \
        image_utils.c \
        map_utils.c \
-	   hooks.c \
+       hooks.c \
        $(wildcard GET_NEXT_LINE/*.c) \
        $(wildcard Libft/*.c) \
        $(wildcard ft_printf/*.c)
@@ -70,7 +70,7 @@ fclean: clean
 re: fclean all
 
 leaks: CFLAGS += -g -DLEAKS
-leaks: all
+leaks: fclean all
 
 # Declare phony targets
-.PHONY: all clean fclean re $(LIBFT) $(FT_PRINTF)
+.PHONY: all clean fclean re leaks $(LIBFT) $(FT_PRINTF)
