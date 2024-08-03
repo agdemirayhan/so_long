@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 22:29:23 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/28 15:11:32 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/08/03 09:11:52 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,9 @@ void	check_map(int argc, char **argv, t_game *game)
 	if (!check_args(argc, argv))
 		error_handling("Args are wrong!");
 	fd = open(argv[1], O_RDONLY);
-	get_map_height_and_width(game, fd);
 	if (fd == -1)
 		error_handling("Cannot read the map");
+	get_map_height_and_width(game, fd);
 	close(fd);
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
