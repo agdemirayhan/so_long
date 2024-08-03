@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 22:31:49 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/08/03 09:04:52 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/08/03 09:29:23 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,11 @@
 #include "libft/libft.h"
 #include "so_long.h"
 
-void	ft_hook(void *param)
-{
-	t_game	*game;
-
-	game = param;
-	put_image_in_map(game);
-}
-
 void	my_keyhook(mlx_key_data_t keydata, void *param)
 {
 	t_game	*game;
 
 	game = param;
-	put_image_in_map(game);
 	if (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT)
 	{
 		if (keydata.key == MLX_KEY_ESCAPE)
@@ -50,4 +41,5 @@ void	my_keyhook(mlx_key_data_t keydata, void *param)
 			mlx_close_window(game->mlx);
 		}
 	}
+	put_image_in_map(game);
 }

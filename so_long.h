@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 19:54:07 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/07/31 22:17:26 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/08/03 09:42:57 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void			get_map_height_and_width(t_game *game, int fd);
 char			**open_map(char **argv, int height);
 void			check_map(int argc, char **argv, t_game *game);
 char			**get_map(int argc, char **argv, t_game *game);
-void			ft_hook(void *param);
 void			my_keyhook(mlx_key_data_t keydata, void *param);
 void			accessibility(char **map, t_game *game, char **argv);
 void			free_map(char **map);
